@@ -17,7 +17,7 @@ env:
 jobs:
   build_mingw_arm:
     name: CLI / LibHB (ARM)
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
 
@@ -141,7 +141,7 @@ jobs:
         
   build_mingw_x64:
     name: CLI / LibHB
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
 
