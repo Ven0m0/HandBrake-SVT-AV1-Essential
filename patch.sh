@@ -10,49 +10,23 @@ The src_dir is the directory that contains the HandBrake source code (defaults t
 
 If no directory is found, the program exits"
 
-if [ "$#" -gt 2 ]; then
-    echo "$help"
-	exit 1
-fi
-
-
+[[ "$#" -gt 2 ]] && echo "$help"; exit 1
 for (( i=1; i <= "$#"; i++ )); do
 	case ${!i} in
-		-h | --help)
-			echo "$help"
-			exit 1
-			;;
+		-h | --help) echo "$help"; exit 1 ;;
 		-c | --clone)
-			if [ "$i" -lt "$#" ]; then
-				echo "$help"
-				exit 1
-			fi
-			rm -rf HandBrake
-			git clone https://github.com/HandBrake/HandBrake.git
-			;;
-		-*)
-			echo "${!i} option doesn't exists!"
-			echo "$help"
-			exit 1
-			;;
-		*)
-			src_dir=$1
-			;;
+			[[ "$i" -lt "$#" ]] && echo "$help"; exit 1
+			rm -rf HandBrake; git clone https://github.com/HandBrake/HandBrake.git ;;
+		-*) echo "${!i} option doesn't exists!"; echo "$help"; exit 1 ;;
+		*) src_dir="$1" ;;
 	esac
 done
-
-if [ ! -d "$src_dir" ]; then
-	echo "$src_dir directory doesn't exists!"
-	echo "$help"
-	exit 1
+if [[ ! -d "$src_dir" ]]; then
+	echo "$src_dir directory doesn't exists!"; echo "$help"; exit 1
 fi
-
-
 for filename in $BASEDIR/patches/*.patch; do
-    patch -t -N -p1 -d $src_dir < "$filename"  || exit 1
+ patch -Np1 -t -d $src_dir < "$filename" || exit 1
 done
-
 # The flatpak build refers to the latest commit, so we add a commit that includes the patches
-cd $src_dir
-git add .
-git -c user.name='deadbeef' -c user.email='deadbeef' commit -m "Patch"
+cd $src_dir; git add .
+git -c user.name='ven0m0' -c user.email='ven0m0' commit -m "Patch"
