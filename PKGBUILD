@@ -3,11 +3,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 # Contributor: Sebastien Piccand <sebcactus gmail com>
 
-pkgname=(
-  'handbrake-svt-av1-essential-llvm-optimized'
-  'handbrake-svt-av1-essential-llvm-optimized-cli'
-)
-
+pkgname=('handbrake-svt-av1-essential-llvm-optimized' 'handbrake-svt-av1-essential-llvm-optimized-cli')
 pkgver=1.9.0
 pkgrel=2
 arch=('x86_64')
@@ -62,7 +58,7 @@ makedepends=(
   'lld'
   'llvm'
   # AMD VCE encoding on Linux requires Vulkan
-  'vulkan-headers'
+  #'vulkan-headers'
   "${_commondeps[@]}"
   "${_guideps[@]}"
 )
@@ -70,16 +66,11 @@ options=('!lto') # https://bugs.archlinux.org/task/72600
 source=("HandBrake::git+https://github.com/HandBrake/HandBrake.git" "HandBrake-SVT-AV1-Essential::git+https://github.com/nekotrix/HandBrake-SVT-AV1-Essential.git")
 sha256sums=('SKIP' 'SKIP')
 
-pkgver() {
-  cd "${srcdir}/HandBrake"
-  git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
-}
+pkgver() { cd "${srcdir}/HandBrake"; git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'; }
 
 setup_compiler() {
-  export CC="/usr/bin/clang"
-  unset CFLAGS
-  export CXX="/usr/bin/clang++"
-  unset CXXFLAGS
+  export CC="/usr/bin/clang"; unset CFLAGS
+  export CXX="/usr/bin/clang++"; unset CXXFLAGS
   export CPP="/usr/bin/clang-cpp"
   export LD="/usr/bin/lld"
   export LDFLAGS="-fuse-ld=lld"
@@ -96,19 +87,11 @@ setup_compiler() {
 build() {
   ./HandBrake-SVT-AV1-Essential/patch.sh
   setup_compiler
-
   local -a CONFIGURE_OPTIONS=(
-    --launch-jobs=0
-    --prefix=/usr
-    --cc="${CC}"
-    --ar="${AR}"
-    --ranlib="${RANLIB}"
-    --strip="${STRIP}"
-    --lto=on
-    --enable-qsv
-    --enable-vce
-  )
-
+    --launch-jobs=0 --prefix=/usr
+    --cc="${CC}" --ar="${AR}"
+    --ranlib="${RANLIB}" --strip="${STRIP}"
+    --lto=on --enable-qsv --enable-vce)
   cd "${srcdir}/HandBrake" || exit
   ./configure "${CONFIGURE_OPTIONS[@]}"
   make -C build
@@ -116,21 +99,12 @@ build() {
 
 package_handbrake-svt-av1-essential-llvm-optimized() {
   pkgdesc="Multithreaded video transcoder optimized with LLVM"
-  depends=(
-    'desktop-file-utils'
-    'hicolor-icon-theme'
-    "${_commondeps[@]}"
-    "${_guideps[@]}"
-  )
-  optdepends=(
-    'gst-plugins-good: for video previews'
-    'gst-libav: for video previews'
-    'intel-media-sdk: Intel QuickSync support'
-    'libdvdcss: for decoding encrypted DVDs'
-  )
+  depends=('desktop-file-utils' 'hicolor-icon-theme'
+    "${_commondeps[@]}" "${_guideps[@]}")
+  optdepends=('gst-plugins-good: for video previews' 'libdvdcss: for decoding encrypted DVDs'
+    'gst-libav: for video previews' 'intel-media-sdk: Intel QuickSync support')
   provides=(handbrake)
   conflicts=(handbrake)
-
   make \
     --directory="${srcdir}/HandBrake/build" \
     DESTDIR="${pkgdir}" \
@@ -141,12 +115,9 @@ package_handbrake-svt-av1-essential-llvm-optimized() {
 package_handbrake-svt-av1-essential-llvm-optimized-cli() {
   pkgdesc="Multithreaded video transcoder optimized with LLVM (CLI)"
   depends=("${_commondeps[@]}")
-  optdepends=(
-    'intel-media-sdk: Intel QuickSync support'
-    'libdvdcss: for decoding encrypted DVDs'
-  )
+  optdepends=('intel-media-sdk: Intel QuickSync support'
+    'libdvdcss: for decoding encrypted DVDs')
   provides=(handbrake-cli)
   conflicts=(handbrake-cli)
-
   install -D "${srcdir}/HandBrake/build/HandBrakeCLI" "${pkgdir}/usr/bin/HandBrakeCLI"
 }
