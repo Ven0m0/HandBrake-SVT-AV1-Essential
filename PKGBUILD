@@ -54,7 +54,7 @@ makedepends=(
   'cmake'
   'meson'
   'git'
-  'clang'
+  'clang>=20'
   'lld'
   'llvm'
   # AMD VCE encoding on Linux requires Vulkan
@@ -64,9 +64,9 @@ makedepends=(
 )
 options=('!lto') # https://bugs.archlinux.org/task/72600
 source=("HandBrake::git+https://github.com/HandBrake/HandBrake.git" "HandBrake-SVT-AV1-Essential::git+https://github.com/nekotrix/HandBrake-SVT-AV1-Essential.git")
-sha256sums=('SKIP' 'SKIP')
+sha256sums=('SKIP')
 
-pkgver() { cd "${srcdir}/HandBrake"; git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'; }
+pkgver() { cd "${srcdir}/HandBrake"; git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'; git gc --auto --prune=now; }
 
 setup_compiler() {
   export CC="/usr/bin/clang"; unset CFLAGS
@@ -91,7 +91,8 @@ build() {
     --launch-jobs=0 --prefix=/usr
     --cc="${CC}" --ar="${AR}"
     --ranlib="${RANLIB}" --strip="${STRIP}"
-    --lto=on --enable-qsv --enable-vce)
+    --lto=on --enable-qsv --enable-vce 
+    --optimize=speed --cpu=native)
   cd "${srcdir}/HandBrake" || exit
   ./configure "${CONFIGURE_OPTIONS[@]}"
   make -C build
@@ -105,10 +106,7 @@ package_handbrake-svt-av1-essential-llvm-optimized() {
     'gst-libav: for video previews' 'intel-media-sdk: Intel QuickSync support')
   provides=(handbrake)
   conflicts=(handbrake)
-  make \
-    --directory="${srcdir}/HandBrake/build" \
-    DESTDIR="${pkgdir}" \
-    install
+  make --directory="${srcdir}/HandBrake/build" DESTDIR="${pkgdir}" install
   rm "${pkgdir}/usr/bin/HandBrakeCLI"
 }
 
