@@ -10,9 +10,13 @@ on:
   workflow_dispatch:
 
 env:
-  TOOLCHAIN_VERSION: "20250826"
+  TOOLCHAIN_VERSION: "20240826"
   TOOLCHAIN_SHA: "e89251ff7ee45fc45d50ed5c68ff45ebf77f0c83c8329db687d6c78652686738"
-  TOOLCHAIN_FILE: "llvm-mingw-20250826-msvcrt-ubuntu-22.04-x86_64.tar.xz"
+  TOOLCHAIN_FILE: "llvm-mingw-20240826-msvcrt-ubuntu-22.04-x86_64.tar.xz"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   build_mingw_arm:
@@ -38,7 +42,7 @@ jobs:
             mkdir toolchains
             mv ${{ env.TOOLCHAIN_FILE }} toolchains
             cd toolchains
-            tar xvf ${{ env.TOOLCHAIN_FILE }}
+            tar xf ${{ env.TOOLCHAIN_FILE }}
         else
             echo "Toolchain Verification FAILED. Exiting!"
             exit 1
@@ -173,7 +177,7 @@ jobs:
             mkdir toolchains
             mv ${{ env.TOOLCHAIN_FILE }} toolchains
             cd toolchains
-            tar xvf ${{ env.TOOLCHAIN_FILE }}
+            tar xf ${{ env.TOOLCHAIN_FILE }}
         else
             echo "Toolchain Verification FAILED. Exiting!"
             exit 1
@@ -324,7 +328,7 @@ jobs:
           path: win/
        
       # Generate Hashes
-      - name: Generate SHA265 Hashes
+      - name: Generate SHA256 Hashes
         run: |
           cd win
           sha256sum * > sha256.txt
