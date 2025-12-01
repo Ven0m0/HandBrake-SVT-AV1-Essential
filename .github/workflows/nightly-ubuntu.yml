@@ -60,13 +60,13 @@ jobs:
         mv build/gtk/src/ghb ../ghb-$(date +'%Y%m%d')-master-x86_64
 
     - name: Upload HandBrake CLI
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: HandBrakeCLI
         path: ./HandBrakeCLI*
 
     - name: Upload HandBrake GUI
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: HandBrakeGUI
         path: ./ghb-*

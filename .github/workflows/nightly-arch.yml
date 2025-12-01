@@ -41,7 +41,7 @@ jobs:
       uses: edlanglois/pkgbuild-action@v1.1.9
 
     - name: Upload HandBrake-SVT-AV1-PSY Archive
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: HandBrakePKG
         path: ${{ steps.makepkg.outputs.pkgfile0 }}
