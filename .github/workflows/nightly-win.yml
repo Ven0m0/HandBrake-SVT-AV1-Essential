@@ -23,7 +23,7 @@ jobs:
     name: CLI / LibHB (ARM)
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - name: Setup Environment
       run: |
@@ -77,7 +77,7 @@ jobs:
     runs-on: windows-2022
     needs: build_mingw_arm
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - name: Clone and Setup
       run: |
@@ -147,7 +147,7 @@ jobs:
     name: CLI / LibHB
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - name: Cargo-C Toolchain Cache
       id: windows-cargo-c-toolchain
@@ -217,7 +217,7 @@ jobs:
     runs-on: windows-2022
     needs: build_mingw_x64
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - name: Clone and Setup
       run: |
@@ -287,7 +287,7 @@ jobs:
     needs: [build_gui_x64, build_gui_arm64]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
        
       # X64 Devices
       - name: Download Artifacts - CLI x64
