@@ -1,5 +1,5 @@
 name: Flatpak Build
-
+l
 on:
   push:
     branches:
@@ -12,13 +12,13 @@ on:
 jobs:
   build:
     name: Build on Linux
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Cargo-C Toolchain Cache
       id: linux-cargo-c-toolchain
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ~/.cargo/bin/cargo-capi
@@ -78,7 +78,7 @@ jobs:
     needs: build
     if: github.event_name != 'pull_request'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
        
       - name: Download Artifacts - Flatpak Binaries
         uses: actions/download-artifact@v4
@@ -87,7 +87,7 @@ jobs:
           path: flatpak/
           
       # Generate Hashes
-      - name: Generate SHA265 Hashes
+      - name: Generate SHA256 Hashes
         run: |
           cd flatpak
           sha256sum * > sha256.txt
