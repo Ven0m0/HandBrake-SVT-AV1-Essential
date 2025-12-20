@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# shellcheck enable=all shell=bash source-path=SCRIPTDIR
 
 BASEDIR=$(dirname "$0")
 src_dir="HandBrake"
