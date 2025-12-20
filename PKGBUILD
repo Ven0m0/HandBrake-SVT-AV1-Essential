@@ -1,8 +1,8 @@
+# shellcheck enable=all shell=bash source-path=SCRIPTDIR
 # Maintainer: Holger Obermaier <holgerob@gmx.de>
 # Contributor: Evangelos Foutras <evangelos@foutrelis.com>
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 # Contributor: Sebastien Piccand <sebcactus gmail com>
-
 pkgname=(
   'handbrake-svt-av1-essential-llvm-optimized'
   'handbrake-svt-av1-essential-llvm-optimized-cli'
@@ -75,27 +75,19 @@ pkgver() {
 }
 
 setup_compiler() {
-  export CC="/usr/bin/clang"
-  unset CFLAGS
-  export CXX="/usr/bin/clang++"
-  unset CXXFLAGS
-  export CPP="/usr/bin/clang-cpp"
-  export LD="/usr/bin/lld"
+  export CC="/usr/bin/clang" CXX="/usr/bin/clang++"
+  export CPP="/usr/bin/clang-cpp" LD="/usr/bin/lld"
+  unset CFLAGS CXXFLAGS
   export LDFLAGS="-fuse-ld=lld"
-  export AR="/usr/bin/llvm-ar"
-  export RANLIB="/usr/bin/llvm-ranlib"
-  export NM="/usr/bin/llvm-nm"
-  export ADDR2LINE="/usr/bin/llvm-addr2line"
-  export OBJCOPY="/usr/bin/llvm-objcopy"
-  export OBJDUMP="/usr/bin/llvm-objdump"
-  export READELF="/usr/bin/llvm-readelf"
-  export STRIP="/usr/bin/llvm-strip"
+  export AR="/usr/bin/llvm-ar" RANLIB="/usr/bin/llvm-ranlib" 
+  export NM="/usr/bin/llvm-nm" ADDR2LINE="/usr/bin/llvm-addr2line" 
+  export OBJCOPY="/usr/bin/llvm-objcopy" OBJDUMP="/usr/bin/llvm-objdump" 
+  export READELF="/usr/bin/llvm-readelf" STRIP="/usr/bin/llvm-strip" 
 }
 
 build() {
   ./HandBrake-SVT-AV1-Essential/patch.sh
   setup_compiler
-
   local -a CONFIGURE_OPTIONS=(
     --launch-jobs=0
     --prefix=/usr
@@ -107,13 +99,12 @@ build() {
     --enable-qsv --enable-vce
     --enable-nvenc --enable-nvdec
   )
-
   cd "${srcdir}/HandBrake" || exit
   ./configure "${CONFIGURE_OPTIONS[@]}"
   make -C build --jobs=$(nproc)
 }
 
-package_handbrake-svt-av1-essential-llvm-optimized() {
+package_handbrke-svt-av1-essential-llvm-optimized() {
   pkgdesc="Multithreaded video transcoder optimized with LLVM"
   depends=(
     'desktop-file-utils'
