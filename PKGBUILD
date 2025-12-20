@@ -7,7 +7,6 @@ pkgname=(
   'handbrake-svt-av1-essential-llvm-optimized'
   'handbrake-svt-av1-essential-llvm-optimized-cli'
 )
-
 pkgver=1.9.0
 pkgrel=2
 arch=('x86_64')
@@ -104,14 +103,14 @@ build() {
     --ar="${AR}"
     --ranlib="${RANLIB}"
     --strip="${STRIP}"
-    --lto=on
-    --enable-qsv
-    --enable-vce
+    --lto=on --cpu=native --optimize=speed
+    --enable-qsv --enable-vce
+    --enable-nvenc --enable-nvdec
   )
 
   cd "${srcdir}/HandBrake" || exit
   ./configure "${CONFIGURE_OPTIONS[@]}"
-  make -C build
+  make -C build --jobs=$(nproc)
 }
 
 package_handbrake-svt-av1-essential-llvm-optimized() {
@@ -130,14 +129,12 @@ package_handbrake-svt-av1-essential-llvm-optimized() {
   )
   provides=(handbrake)
   conflicts=(handbrake)
-
   make \
     --directory="${srcdir}/HandBrake/build" \
     DESTDIR="${pkgdir}" \
     install
   rm "${pkgdir}/usr/bin/HandBrakeCLI"
 }
-
 package_handbrake-svt-av1-essential-llvm-optimized-cli() {
   pkgdesc="Multithreaded video transcoder optimized with LLVM (CLI)"
   depends=("${_commondeps[@]}")
@@ -147,6 +144,5 @@ package_handbrake-svt-av1-essential-llvm-optimized-cli() {
   )
   provides=(handbrake-cli)
   conflicts=(handbrake-cli)
-
   install -D "${srcdir}/HandBrake/build/HandBrakeCLI" "${pkgdir}/usr/bin/HandBrakeCLI"
 }
