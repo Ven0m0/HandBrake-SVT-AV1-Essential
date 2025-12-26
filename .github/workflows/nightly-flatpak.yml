@@ -1,5 +1,4 @@
 name: Flatpak Build
-l
 on:
   push:
     branches:
