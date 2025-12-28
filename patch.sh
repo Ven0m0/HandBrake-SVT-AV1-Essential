@@ -16,7 +16,7 @@ for (( i=1; i <= "$#"; i++ )); do
 	-h | --help) echo "$help"; exit 1 ;;
 	-c | --clone)
 		[[ "$i" -lt "$#" ]] && { echo "$help"; exit 1; }
-		rm -rf HandBrake; git clone --depth 1 https://github.com/HandBrake/HandBrake.git ;;
+		rm -rf HandBrake; git clone --depth 1 --filter=blob:none https://github.com/HandBrake/HandBrake.git ;;
 	-*) echo "${!i} option doesn't exists!"; echo "$help"; exit 1 ;;
 	*) src_dir="$1" ;;
 	esac
