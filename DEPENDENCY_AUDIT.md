@@ -5,7 +5,7 @@
 
 ## Executive Summary
 
-This report analyzes the project's dependencies across all platforms (Arch Linux, Ubuntu, Flatpak, Windows, macOS) for outdated packages, security vulnerabilities, and unnecessary bloat. The audit found **23 items requiring updates** across GitHub Actions, build toolchains, and Python dependencies.
+This report analyzes the project's dependencies across all platforms (Arch Linux, Ubuntu, Flatpak, Windows) for outdated packages, security vulnerabilities, and unnecessary bloat. The audit found **23 items requiring updates** across GitHub Actions, build toolchains, and Python dependencies.
 
 **Severity Breakdown:**
 - 🔴 **Critical:** 3 items (breaking changes deadline)
@@ -44,7 +44,7 @@ This report analyzes the project's dependencies across all platforms (Arch Linux
 ---
 
 ### 🟡 Checkout Action (Inconsistent Versions)
-**Current:** Mixed usage - `v4` (Ubuntu/macOS) and `v6` (Arch/Flatpak/Windows)
+**Current:** Mixed usage - `v4` (Ubuntu) and `v6` (Arch/Flatpak/Windows)
 **Latest:** `v6`
 **Status:** Recommended upgrade
 
@@ -60,7 +60,6 @@ This report analyzes the project's dependencies across all platforms (Arch Linux
 
 **Files to Update:**
 - `.github/workflows/nightly-ubuntu.yml` (line 17): v4 → v6
-- `.github/workflows/nightly-mac.yml` (line 19, 92): v4 → v6
 
 **References:**
 - [Checkout Releases](https://github.com/actions/checkout/releases)
@@ -69,8 +68,8 @@ This report analyzes the project's dependencies across all platforms (Arch Linux
 
 ### 🟡 Artifact Actions (Mixed Versions)
 **Current:**
-- `upload-artifact@v4` (Ubuntu/macOS) and `v5` (Windows/Arch/Flatpak)
-- `download-artifact@v4` (Ubuntu/macOS/Flatpak) and `v6` (Windows)
+- `upload-artifact@v4` (Ubuntu) and `v5` (Windows/Arch/Flatpak)
+- `download-artifact@v4` (Ubuntu/Flatpak) and `v6` (Windows)
 
 **Latest:**
 - `upload-artifact@v5`
@@ -90,7 +89,6 @@ This report analyzes the project's dependencies across all platforms (Arch Linux
 
 **Files to Update:**
 - `.github/workflows/nightly-ubuntu.yml`: v4 → v5/v6
-- `.github/workflows/nightly-mac.yml`: v4 → v5/v6
 - `.github/workflows/nightly-flatpak.yml`: v4 (download) → v6
 - `.github/workflows/nightly-arch.yml`: v4 (upload) → v5
 
@@ -98,32 +96,6 @@ This report analyzes the project's dependencies across all platforms (Arch Linux
 - [Upload Artifact Releases](https://github.com/actions/upload-artifact)
 - [Download Artifact Releases](https://github.com/actions/download-artifact)
 - [Migration Guide](https://github.blog/news-insights/product-news/get-started-with-v4-of-github-actions-artifacts/)
-
----
-
-### 🟡 Setup Python Action
-**Current:** `actions/setup-python@v4` (macOS) and `v6` (macOS)
-**Latest:** `v6`
-**Status:** Partially updated
-
-**Issues:**
-- Mixed usage in macOS workflow
-- Missing enhanced workflow support for ubuntu-arm runners
-- Missing support for .tool-versions and enhanced .python-version reading
-
-**Recommendation:**
-```yaml
-# Ensure all instances use:
-- uses: actions/setup-python@v6
-  with:
-    python-version: '3.14.2'  # Latest stable
-```
-
-**Files to Update:**
-- `.github/workflows/nightly-mac.yml` (line 20): Update Python to 3.14.2
-
-**References:**
-- [Setup Python Releases](https://github.com/actions/setup-python/releases)
 
 ---
 
@@ -233,34 +205,6 @@ env:
 
 ---
 
-### 🟡 Python Version (macOS)
-**Current:** `3.13.5`
-**Latest:** `3.14.2` (December 5, 2025)
-**Status:** One major version behind
-
-**Issues:**
-- Missing new features (free-threaded Python, t-strings, etc.)
-- Missing security fixes from 3.14 branch
-
-**Recommendation:**
-Update `.github/workflows/nightly-mac.yml` (line 22):
-```yaml
-- uses: actions/setup-python@v6
-  with:
-    python-version: '3.14.2'
-```
-
-**Benefits:**
-- Latest security patches
-- Performance improvements
-- New language features
-
-**References:**
-- [Python 3.14.0 Release](https://www.python.org/downloads/release/python-3140/)
-- [Python Status](https://devguide.python.org/versions/)
-
----
-
 ### 🟢 Ubuntu Runner Version
 **Current:** `ubuntu-24.04`
 **Latest:** `ubuntu-24.04` (latest LTS)
@@ -280,17 +224,6 @@ Update `.github/workflows/nightly-mac.yml` (line 22):
 **Notes:**
 - Using latest stable Windows runner
 - No action required
-
----
-
-### 🟢 macOS Runner Version
-**Current:** `macos-latest`
-**Latest:** Dynamic (currently macOS 13+)
-**Status:** ✅ Current
-
-**Notes:**
-- Using rolling latest tag
-- Automatically updates with GitHub's offerings
 
 ---
 
