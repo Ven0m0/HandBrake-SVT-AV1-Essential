@@ -13,7 +13,7 @@ jobs:
     name: Build on Arch
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Cargo-C Toolchain Cache
       id: linux-cargo-c-toolchain
@@ -46,7 +46,7 @@ jobs:
     needs: build
     if: github.event_name != 'pull_request'
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
        
     - name: Download Artifacts - PKG Arch Linux
       uses: actions/download-artifact@v8
